@@ -1,0 +1,33 @@
+
+services:
+  backend:
+    image: node:20
+    platform: linux/amd64
+    container_name: family-tree-backend
+    working_dir: /app
+    volumes:
+      - ./family-tree-backend:/app
+    ports:
+      - "8888:8888"
+    environment:
+      - NODE_ENV=development
+    command: sh -c "npm install && npm run server"
+    networks:
+      - my-network
+
+  frontend:
+    image: node:20
+    platform: linux/amd64
+    container_name: family-tree
+    working_dir: /app
+    volumes:
+      - ./family-tree:/app
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
