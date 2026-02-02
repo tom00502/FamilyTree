@@ -98,7 +98,6 @@ export default class GameFlow {
 
         this.room.setStatus(Status.Complete);
 
-        // 你可以在這裡做統計結果（例如依 answererId 統計數量）
         const allData = this.room.getAllData();
 
         const countByPlayer: Record<string, number> = {};

@@ -1,4 +1,3 @@
-// GameManager.ts
 import Room from "./Module/Room";
 import Player from "./Module/Player";
 import GameFlow, { type FlowIO } from "./Flow";
@@ -34,6 +33,10 @@ export default class GameManager {
 
     return { player, room };
   }
+
+  removeRoom(roomCode: string) {
+  this.rooms.delete(roomCode);
+    }
 
   getRoom(roomCode: string) {
     return this.rooms.get(roomCode);

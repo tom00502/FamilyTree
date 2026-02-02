@@ -7,7 +7,7 @@ import { loadQuestion } from "./Utilities";
 
 const wsToPlayer = new Map<WebSocket, Player>();
 const playerIdToWs = new Map<string, WebSocket>();
-const questionList=loadQuestion("./Module/question.json")
+const questionList=loadQuestion("./question.json")
 
 function broadcastToRoom(roomCode: string, obj: any) {
   const room = gameManager.getRoom(roomCode);
@@ -36,11 +36,11 @@ function ConnectionToServer(port: number): WebSocketServer {
 function WssListener(wss: WebSocketServer) {
   wss.on("connection", (ws) => {
     send(ws, { action: "connected" });
-
+    console.log("new client")
     ws.on("message", (raw) => {
       try {
         const msg = JSON.parse(raw.toString());
-
+        console.log(msg)
         switch (msg.action) {
           case "create_room": {
             const birthday = new Date(msg.birthday);
@@ -122,10 +122,41 @@ function WssListener(wss: WebSocketServer) {
     });
 
     ws.on("close", () => {
-      const player = wsToPlayer.get(ws);
-      if (player) playerIdToWs.delete(player.getUUID());
-      wsToPlayer.delete(ws);
-    });
+  const player = wsToPlayer.get(ws);
+
+  if (player) {
+    const code = player.getRoomCode() as string | undefined;
+    console.log(player.getIsMaster())
+    if (code) {
+      const room = gameManager.getRoom(code);
+      if (room) {
+        room.removeMember(player); 
+
+        if(player.getIsMaster())
+        {
+            console.log("trigger")
+            gameManager.removeRoom(code); 
+        }
+
+        broadcastToRoom(code, {
+          action: "member_update",
+          members: room.getMembers().map((p: any) => p.getName()),
+        });
+        
+
+
+        if (room.getMembers().length === 0) {
+          gameManager.removeRoom(code); 
+        }
+      }
+    }
+
+    playerIdToWs.delete(player.getUUID());
+  }
+
+  wsToPlayer.delete(ws);
+});
+
   });
 }
 

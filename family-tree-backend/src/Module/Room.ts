@@ -1,41 +1,45 @@
-// Room.ts（示意）
 import { randomUUID } from "node:crypto";
 import Player from "./Player";
 import { Status } from "./Status";
 import type { Data } from "./Data";
 
 export default class Room {
-  private readonly roomCode: string = randomUUID();
-  private members: Player[] = [];
-  private status: Status = Status.Waiting;
-  private data: Data[] = [];
+    private readonly roomCode: string = "1" // randomUUID();
+    private members: Player[] = [];
+    private status: Status = Status.Waiting;
+    private data: Data[] = [];
 
-  getRoomCode() {
-    return this.roomCode;
-  }
+    getRoomCode() {
+        return this.roomCode;
+    }
 
-  addMember(player: Player) {
-    this.members.push(player);
-  }
+    removeMember(player: Player) {
+        this.members = this.members.filter((x) => x !== player);
+    }
 
-  getMembers() {
-    return this.members;
-  }
+    addMember(player: Player) {
+        this.members.push(player);
+    }
 
-  setStatus(status: Status) {
-    this.status = status;
-  }
+    getMembers() {
+        return this.members;
+    }
 
-  getStatus() {
-    return this.status;
-  }
+    setStatus(status: Status) {
+        this.status = status;
+    }
 
-  addData(d: Data) {
-    this.data.push(d);
-  }
+    getStatus() {
+        return this.status;
+    }
 
-  getAllData()
-  {
-    return this.data 
-  }
+    addData(d: Data) {
+        this.data.push(d);
+    }
+
+    getAllData() {
+        return this.data
+    }
+
+
 }
