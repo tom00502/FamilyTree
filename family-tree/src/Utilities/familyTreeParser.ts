@@ -249,6 +249,41 @@ export function parseDataToTree(dataList: RawData[], attrsMap: AttrsMap = {}) {
   });
 
   // ==========================================
+  // 血脈對齊 (同步平輩的父母)
+  // 如果 A 是 B 的兄弟姐妹，系統必須確保 B 也認列 A 的同一對父母，反之亦然。
+  // 否則 react-family-tree 的繪圖演算法會因為沒有共通長輩點 (Node Root) 而拒絕繪製平輩的橫向連線。
+  // ==========================================
+  nodesMap.forEach(node => {
+    if (node.siblings.length > 0) {
+      node.siblings.forEach(sibItem => {
+        const sibNode = nodesMap.get(sibItem.id);
+        if (sibNode) {
+          // 將 A 的父母賦予 B
+          node.parents.forEach(pItem => {
+            if (!hasRelation(sibNode.parents, pItem.id)) {
+              sibNode.parents.push({ id: pItem.id, type: 'blood' });
+              const pNode = nodesMap.get(pItem.id);
+              if (pNode && !hasRelation(pNode.children, sibNode.id)) {
+                pNode.children.push({ id: sibNode.id, type: 'blood' });
+              }
+            }
+          });
+          // 將 B 的父母賦予 A
+          sibNode.parents.forEach(pItem => {
+            if (!hasRelation(node.parents, pItem.id)) {
+              node.parents.push({ id: pItem.id, type: 'blood' });
+              const pNode = nodesMap.get(pItem.id);
+              if (pNode && !hasRelation(pNode.children, node.id)) {
+                pNode.children.push({ id: node.id, type: 'blood' });
+              }
+            }
+          });
+        }
+      });
+    }
+  });
+
+  // ==========================================
   // 第二遍：自動推算兄弟姊妹關係
   // ==========================================
   nodesMap.forEach(node => {

@@ -175,9 +175,9 @@ export default class GameFlow {
         }
         state.pendingTreeQuestions.unshift(...dynamicQuestions);
       }
-    } else if (q.id === "gen_parents_children" && typeof rawVal === "number") {
-      const count = rawVal;
-      if (count > 1) { // >= 2 since 1 is yourself
+    } else if (q.id === "gen_parents_children") {
+      const count = Number(rawVal);
+      if (!isNaN(count) && count > 1) { // >= 2 since 1 is yourself
         const dynamicQuestions: GameQuestion[] = [];
         for (let i = 1; i < count; i++) {
           dynamicQuestions.push({
@@ -206,9 +206,9 @@ export default class GameFlow {
         );
       }
       state.pendingTreeQuestions.unshift(...dynamicQuestions);
-    } else if (q.id === "gen_father_siblings" && typeof rawVal === "number") {
-      const count = rawVal;
-      if (count > 1) {
+    } else if (q.id === "gen_father_siblings") {
+      const count = Number(rawVal);
+      if (!isNaN(count) && count > 1) {
         const dynamicQuestions: GameQuestion[] = [];
         for (let i = 1; i < count; i++) {
           dynamicQuestions.push({
@@ -221,9 +221,9 @@ export default class GameFlow {
         }
         state.pendingTreeQuestions.unshift(...dynamicQuestions);
       }
-    } else if (q.id === "gen_mother_siblings" && typeof rawVal === "number") {
-      const count = rawVal;
-      if (count > 1) {
+    } else if (q.id === "gen_mother_siblings") {
+      const count = Number(rawVal);
+      if (!isNaN(count) && count > 1) {
         const dynamicQuestions: GameQuestion[] = [];
         for (let i = 1; i < count; i++) {
           dynamicQuestions.push({

@@ -54,7 +54,7 @@ function isGameQuestion(x: any): x is GameQuestion {
 }
 
 function App() {
-  const { connected, lastMessage, send } = useWebSocket("ws://localhost:8888");
+  const { connected, lastMessage, send } = useWebSocket(`ws://${window.location.hostname}:8888`);
 
   const [screen, setScreen] = useState<Screen>("result");
   const [mode, setMode] = useState<Mode>("create");

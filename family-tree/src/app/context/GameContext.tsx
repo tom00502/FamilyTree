@@ -31,7 +31,7 @@ interface GameContextType {
 const GameContext = createContext<GameContextType | null>(null);
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
-    const { connected, subscribe, send } = useWebSocket('ws://localhost:8888');
+    const { connected, subscribe, send } = useWebSocket(`ws://${window.location.hostname}:8888`);
 
     const [mode, setMode] = useState<'create' | 'join'>('create');
     const [roomCode, setRoomCode] = useState('');
