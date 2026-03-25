@@ -54,6 +54,14 @@ export function FamilyTreeResultPage({ dataList, attrsMap, onShare, onPlayAgain 
         if (!d.a || !d.b) return false;
         if (typeof d.a === 'string' && d.a.startsWith('未知')) return false;
         if (typeof d.b === 'string' && d.b.startsWith('未知')) return false;
+        // Filter ghost nodes: pure numbers getting accidentally stored as "person names"
+        if (typeof d.a === 'string' && /^\d+$/.test(d.a.trim())) return false;
+        if (typeof d.b === 'string' && /^\d+$/.test(d.b.trim())) return false;
+        // Filter entries with empty string names
+        if (typeof d.a === 'string' && d.a.trim() === '') return false;
+        if (typeof d.b === 'string' && d.b.trim() === '') return false;
+        // Filter system_cfg entries (backend inference agency)  
+        if (d.answerer === 'system_cfg') return false;
         return true;
       })
       .map((d: any) => ({ relation: d.relation, a: d.a, b: d.b })),

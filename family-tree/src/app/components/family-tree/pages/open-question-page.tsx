@@ -39,8 +39,11 @@ export function OpenQuestionPage({
   const knownNames = useMemo(() => {
     const names = new Set<string>();
     members.forEach((m: any) => { if (m.name) names.add(m.name); });
-    dataList.forEach((d: any) => { if (d.b) names.add(d.b); });
-    Object.values(attrsMap).forEach((attr: any) => { if (attr.displayName) names.add(attr.displayName); });
+    dataList.forEach((d: any) => {
+      if (d.answerer === 'system_cfg') return; // exclude inferred ghost entries
+      if (d.b && !/^\d+$/.test(d.b.trim()) && d.b.trim() !== '' && !d.b.startsWith('未知')) names.add(d.b);
+    });
+    Object.values(attrsMap).forEach((attr: any) => { if (attr.displayName && !attr.displayName.startsWith('未知') && !/^\d+$/.test(attr.displayName.trim())) names.add(attr.displayName); });
     return Array.from(names);
   }, [members, dataList, attrsMap]);
 
