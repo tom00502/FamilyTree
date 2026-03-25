@@ -1,28 +1,41 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useWebSocket(url: string) {
   const wsRef = useRef<WebSocket | null>(null);
   const [connected, setConnected] = useState(false);
-  const [lastMessage, setLastMessage] = useState<string | null>(null);
+  const listeners = useRef<Set<(msg: string) => void>>(new Set());
 
   useEffect(() => {
+    let isCleaned = false;
     const ws = new WebSocket(url);
     wsRef.current = ws;
 
-    ws.onopen = () => setConnected(true);
-    ws.onclose = () => setConnected(false);
-    ws.onerror = () => setConnected(false);
-    ws.onmessage = (e) => setLastMessage(e.data);
+    ws.onopen = () => { if (!isCleaned) setConnected(true); };
+    ws.onclose = () => { if (!isCleaned) setConnected(false); };
+    ws.onerror = () => { if (!isCleaned) setConnected(false); };
+    ws.onmessage = (e) => {
+      if (!isCleaned) listeners.current.forEach((cb) => cb(e.data));
+    };
 
-    return () => ws.close();
+    return () => {
+      isCleaned = true;
+      ws.close();
+    };
   }, [url]);
 
-  const send = (data: string | object) => {
+  const send = useCallback((data: string | object) => {
     if (!wsRef.current) return;
     wsRef.current.send(
       typeof data === "string" ? data : JSON.stringify(data)
     );
-  };
+  }, []);
 
-  return { connected, lastMessage, send };
+  const subscribe = useCallback((cb: (msg: string) => void) => {
+    listeners.current.add(cb);
+    return () => {
+      listeners.current.delete(cb);
+    };
+  }, []);
+
+  return { connected, send, subscribe };
 }

@@ -28,6 +28,10 @@ export default class Player {
     this.isMaster = isMaster;
   }
 
+  setMaster(isMaster: boolean) {
+    this.isMaster = isMaster;
+  }
+
   getRoomCode() {
     return this.roomCode;
   }

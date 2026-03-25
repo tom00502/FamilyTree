@@ -1,4 +1,214 @@
 [
-  { "id": "q1", "text": "A 跟 B 是什麼關係？" },
-  { "id": "q2", "text": "A 會不會比 B 大？" }
+  {
+    "text": "[]是[]的誰？",
+    "option": [
+      "爸爸",
+      "爺爺",
+      "外公"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]會不會比[]大？",
+    "option": [
+      "會",
+      "不會"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]的外公叫什麼名字？",
+    "option": [],
+    "type": "fill"
+  },
+  {
+    "text": "[]是[]的誰？",
+    "option": [
+      "爸爸",
+      "媽媽",
+      "爺爺",
+      "奶奶",
+      "外公",
+      "外婆",
+      "哥哥",
+      "姐姐",
+      "弟弟",
+      "妹妹",
+      "兒子",
+      "女兒",
+      "配偶"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]是[]的爸爸嗎？",
+    "option": [
+      "是",
+      "不是"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]是[]的媽媽嗎？",
+    "option": [
+      "是",
+      "不是"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]跟[]是夫妻嗎？",
+    "option": [
+      "是",
+      "不是"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]跟[]是兄弟姐妹嗎？",
+    "option": [
+      "是",
+      "不是"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]會不會比[]大？",
+    "option": [
+      "會",
+      "不會"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]比[]大還是小？",
+    "option": [
+      "大",
+      "小"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]跟[]相差幾歲？",
+    "option": [],
+    "type": "number"
+  },
+  {
+    "text": "[]是男生還是女生？",
+    "option": [
+      "男",
+      "女"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]的爸爸是誰？",
+    "option": [],
+    "type": "fill"
+  },
+  {
+    "text": "[]的媽媽是誰？",
+    "option": [],
+    "type": "fill"
+  },
+  {
+    "text": "[]的配偶是誰？",
+    "option": [],
+    "type": "fill"
+  },
+  {
+    "text": "[]的爺爺是誰？",
+    "option": [],
+    "type": "fill"
+  },
+  {
+    "text": "[]的奶奶是誰？",
+    "option": [],
+    "type": "fill"
+  },
+  {
+    "text": "[]的外公是誰？",
+    "option": [],
+    "type": "fill"
+  },
+  {
+    "text": "[]外婆是誰？",
+    "option": [],
+    "type": "fill"
+  },
+  {
+    "text": "[]的外公叫什麼名字？",
+    "option": [],
+    "type": "fill"
+  },
+  {
+    "text": "[]有幾個兄弟姐妹？",
+    "option": [],
+    "type": "number"
+  },
+  {
+    "text": "[]有幾個小孩？",
+    "option": [],
+    "type": "number"
+  },
+  {
+    "text": "[]的父母共有幾個小孩？",
+    "option": [],
+    "type": "number"
+  },
+  {
+    "text": "[]的祖父母共有幾個小孩？",
+    "option": [],
+    "type": "number"
+  },
+  {
+    "text": "在家中你排行第幾？",
+    "option": [],
+    "type": "number"
+  },
+  {
+    "text": "[]排行第幾？",
+    "option": [],
+    "type": "number"
+  },
+  {
+    "text": "[]生了幾個小孩？",
+    "option": [],
+    "type": "number"
+  },
+  {
+    "text": "[]的生日是？",
+    "option": [],
+    "type": "date"
+  },
+  {
+    "text": "[]的出生年份是？",
+    "option": [],
+    "type": "number"
+  },
+  {
+    "text": "[]的年紀是不是比[]大？",
+    "option": [
+      "是",
+      "不是"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]和[]誰比較年長？",
+    "option": [
+      "前者",
+      "後者",
+      "一樣大"
+    ],
+    "type": "select"
+  },
+  {
+    "text": "[]的排行比[]高嗎？",
+    "option": [
+      "是",
+      "不是"
+    ],
+    "type": "select"
+  }
 ]

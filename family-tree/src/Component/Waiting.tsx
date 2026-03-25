@@ -24,10 +24,12 @@ export default function Waiting(props: {
 
       <div style={{ marginTop: 8 }}>
         <button onClick={props.onLeave}>Leave</button>
-        <button onClick={props.onStart} disabled={!props.isHost}>
+        {props.isHost&&<button onClick={props.onStart} disabled={!props.isHost}>
           Start Game
-        </button>
-        {!props.isHost && <div>Only host can start.</div>}
+        </button>}
+        {!props.isHost&&<span>
+          waiting host to start
+        </span>}
       </div>
     </div>
   );

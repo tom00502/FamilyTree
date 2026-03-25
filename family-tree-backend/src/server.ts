@@ -3,11 +3,13 @@ import GameManager from "./GameManager";
 import Player from "./Module/Player";
 import type { Data } from "./Module/Data";
 import { loadQuestion } from "./Utilities";
+import { Status } from "./Module/Status";
 
 
 const wsToPlayer = new Map<WebSocket, Player>();
 const playerIdToWs = new Map<string, WebSocket>();
-const questionList=loadQuestion("./question.json")
+const treeQuestionList = loadQuestion("./question_generatetree.json")
+const questionList = loadQuestion("./question.json")
 
 function broadcastToRoom(roomCode: string, obj: any) {
   const room = gameManager.getRoom(roomCode);
@@ -19,8 +21,14 @@ function broadcastToRoom(roomCode: string, obj: any) {
   }
 }
 
+function sendToPlayer(playerUUID: string, obj: any) {
+  const ws = playerIdToWs.get(playerUUID);
+  if (ws && ws.readyState === WebSocket.OPEN) send(ws, obj);
+}
+
 let gameManager = new GameManager({
-  broadcast: broadcastToRoom
+  broadcast: broadcastToRoom,
+  sendToPlayer,
 });
 
 function send(ws: WebSocket, obj: any) {
@@ -44,7 +52,8 @@ function WssListener(wss: WebSocketServer) {
         switch (msg.action) {
           case "create_room": {
             const birthday = new Date(msg.birthday);
-            const { roomCode, host, room } = gameManager.createRoomAndHost(msg.name, birthday);
+            const duration = msg.duration ? parseInt(msg.duration, 10) : 120;
+            const { roomCode, host, room } = gameManager.createRoomAndHost(msg.name, birthday, duration);
 
             wsToPlayer.set(ws, host);
             playerIdToWs.set(host.getUUID(), ws);
@@ -84,7 +93,7 @@ function WssListener(wss: WebSocketServer) {
             const requester = wsToPlayer.get(ws);
             if (!requester) throw new Error("You are not registered yet");
 
-            gameManager.startGame(msg.roomCode, requester,questionList);
+            gameManager.startGame(msg.roomCode, requester, questionList, treeQuestionList);
 
             broadcastToRoom(msg.roomCode, { action: "game_started" });
             break;
@@ -92,24 +101,35 @@ function WssListener(wss: WebSocketServer) {
 
           case "answer": {
             const requester = wsToPlayer.get(ws);
-            if (!requester) throw new Error("You are not registered yet");
+            if (!requester) throw new Error("Unauthorized");
 
-            const room = gameManager.getRoom(msg.roomCode);
-            if (!room) throw new Error("Room not found");
+            if (msg.answer) {
+              gameManager.submitAnswer(msg.roomCode, requester, {
+                answer: msg.answer,
+                relations: msg.relations,
+                attrs: msg.attrs
+              });
+              break;
+            }
 
-            const data: Data = {
+            // ✅ 旧版：relation/a/b
+            gameManager.submitAnswer(msg.roomCode, requester, {
               relation: msg.relation,
               a: msg.a,
               b: msg.b,
-              answerer: requester.getUUID(),
-            };
-
-            room.addData(data);
-
-            broadcastToRoom(msg.roomCode, {
-              action: "new_answer",
-              data,
             });
+            break;
+          }
+
+          case "check_room": {
+            const room = gameManager.getRoom(msg.roomCode);
+            if (!room) {
+              send(ws, { action: "room_check_result", ok: false, reason: "找不到此房間，請確認代碼是否正確" });
+            } else if (room.getStatus() !== Status.Waiting) {
+              send(ws, { action: "room_check_result", ok: false, reason: "此房間的遊戲已開始，無法加入" });
+            } else {
+              send(ws, { action: "room_check_result", ok: true, roomCode: msg.roomCode });
+            }
             break;
           }
 
@@ -122,40 +142,16 @@ function WssListener(wss: WebSocketServer) {
     });
 
     ws.on("close", () => {
-  const player = wsToPlayer.get(ws);
+      const player = wsToPlayer.get(ws);
 
-  if (player) {
-    const code = player.getRoomCode() as string | undefined;
-    console.log(player.getIsMaster())
-    if (code) {
-      const room = gameManager.getRoom(code);
-      if (room) {
-        room.removeMember(player); 
-
-        if(player.getIsMaster())
-        {
-            console.log("trigger")
-            gameManager.removeRoom(code); 
-        }
-
-        broadcastToRoom(code, {
-          action: "member_update",
-          members: room.getMembers().map((p: any) => p.getName()),
-        });
-        
-
-
-        if (room.getMembers().length === 0) {
-          gameManager.removeRoom(code); 
-        }
+      if (player) {
+        console.log(`Player disconnected, master status: ${player.getIsMaster()}`);
+        gameManager.handleDisconnect(player);
+        playerIdToWs.delete(player.getUUID());
       }
-    }
 
-    playerIdToWs.delete(player.getUUID());
-  }
-
-  wsToPlayer.delete(ws);
-});
+      wsToPlayer.delete(ws);
+    });
 
   });
 }

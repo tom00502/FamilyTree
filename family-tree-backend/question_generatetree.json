@@ -1,0 +1,51 @@
+[
+  {
+    "id": "gen_father_name",
+    "text": "你的爸爸叫什麼名字？",
+    "type": "fill",
+    "option": [],
+    "slots": [],
+    "targetRelation": "爸爸"
+  },
+  {
+    "id": "gen_mother_name",
+    "text": "你的媽媽叫什麼名字？",
+    "type": "fill",
+    "option": [],
+    "slots": [],
+    "targetRelation": "媽媽"
+  },
+  {
+    "id": "gen_spouse_name",
+    "text": "你的配偶叫什麼名字？",
+    "type": "fill",
+    "option": [],
+    "slots": [],
+    "targetRelation": "配偶"
+  },
+  {
+    "id": "gen_children_count",
+    "text": "你有幾個小孩？",
+    "type": "number",
+    "option": [],
+    "slots": [],
+    "targetRelation": "兒子"
+  },
+  {
+    "id": "gen_parents_children",
+    "text": "請問您的父母總共有幾個小孩？(包含您自己)",
+    "type": "number",
+    "option": [],
+    "slots": []
+  },
+  {
+    "id": "gen_inlaw_status",
+    "text": "請問主要是追溯哪一邊的長輩家族？(誰是姻親)",
+    "type": "select",
+    "option": [
+      "媽媽是姻親 (追溯爸爸的家族)",
+      "爸爸是姻親 (追溯媽媽的家族)"
+    ],
+    "slots": []
+  }
+]
